@@ -27,10 +27,8 @@
 		* This may not be necessary if you merged the TRIM imputations
 		* into an existing version of the CPS ASEC.
 		
-			** Remove Children from Inctot 
-			gen niu = 1 if inctot>9999998
-			
-			* Remove missing variables
+	
+			* Change any missing variables for TANF
 			replace ssit = 0 if ssit ==.
 			
 			* Persons in household
@@ -132,7 +130,7 @@
 			replace increti1  = 0 if increti1 ==99999
 			replace increti2  = 0 if increti2 ==99999
 			
-			* Create Vars that Exist in Certain Years
+			* Create Vars that Exist in Certain Years 
 				cap gen mwpval = 0
 					cap replace mwpval = 0 if mwpval ==.
 				cap gen stimulus = 0
@@ -149,12 +147,104 @@
 					replace tanfdiff = 0 if tanfdiff < 0
 				replace socassist = tanfdiff if srcwelfr ==3
 				
+			* Back Out State Credits: 2004 and Before
+			
+			cap gen scred = statetax - stataxac 
+				cap gen scred = 0
+				cap replace scred = 0 if scred < 0
+				cap replace scred = 0 if scred ==.
+				
+				qui sum scred if scred>0, de
+				replace scred = r(p99)*2 if scred > (r(p99)*2) & scred!=.
+			
+	
+				* sEITC from 1993 to 2003
+					
+					recode scred (.=0)
+					replace statetax = 0 if statetax < 0
+				
+					* Colorado: 8
+						replace scred = eitc * .085 if statef==8 & year==1999
+						replace scred = eitc * .1 if statef==8 & (year==2000 | year==2001)
+					* DC: 11
+						replace scred = eitc * .1 if statef==11 & year==2000
+						replace scred = eitc * .25 if statef==11 & inrange(year,2001,2003)
+					* IL: 17
+						replace  scred = eitc * .05 if statef==17 & inrange(year,2000,2003)
+					* IN: 18
+						replace  scred = (.034 * (12000-incwage)) if statef==17 & inrange(year,1999,2002) & u14hh >0 & incwage<12001
+						replace scred = eitc * .06 if statef==17 & year==2003
+					* IA: 19 // non-refund
+						replace scred = eitc * .065 if statef==19 & inrange(year,1992,2003)
+							replace scred = statetax if scred > statetax & statef==19 & inrange(year,1992,2003)		
+					* KS: 20
+						replace scred = eitc * .1 if statef==20 & inrange(year,1998,2001)
+						replace scred = eitc * .15 if statef==20 & inrange(year,2002,2003)
+					* ME: 23
+						replace scred = eitc * .05 if statef==23 & inrange(year,2000,2002)
+							replace scred = statetax if scred > statetax & statef==23 & inrange(year,2000,2002)	
+						replace scred = eitc * .0492 if statef==23 & year==2003
+							replace scred = statetax if scred > statetax & statef==23 & year==2003	
+					* MD: 24 // nonrefund
+						replace scred = eitc * .5 if statef==24 & inrange(year,1993,2003)
+							replace scred = statetax if scred > statetax & statef==24 & inrange(year,1993,2003)	
+					* MA: 25
+						replace scred = eitc * .1 if statef==25 & inrange(year,1997,2000)
+						replace scred = eitc * .15 if statef==25 & inrange(year,2001,2003)
+					* NJ: 34
+						replace scred = eitc * .1 if statef==34 & year==2000
+						replace scred = eitc * .15 if statef==34 & year==2001
+						replace scred = eitc * .175 if statef==34 & year==2002
+						replace scred = eitc * .2 if statef==34 & year==2003
+					* NY: 36
+						replace scred = eitc * .075 if statef==36 & year==1994
+						replace scred = eitc * .1 if statef==36 & year==1995
+						replace scred = eitc * .2 if statef==36 & inrange(year,1996,1999)
+							replace scred = statetax if scred > statetax & statef==36 & inrange(year,1996,1999)
+						replace scred = eitc * .225 if statef==36 & year==2000
+							replace scred = statetax if scred > statetax & statef==36 & year==2000
+						replace scred = eitc * .25 if statef==36 & year==2001
+							replace scred = statetax if scred > statetax & statef==36 & year==2001
+						replace scred = eitc * .275 if statef==36 & year==2002
+							replace scred = statetax if scred > statetax & statef==36 & year==2002
+						replace scred = eitc * .3 if statef==36 & year==2003
+							replace scred = statetax if scred > statetax & statef==36 & year==2003
+					* OK: 40
+						replace scred = eitc * .05 if statef==40 & (year==2002 | year==2003)
+					* OR: 41
+						replace scred = eitc * .05 if statef==41 & inrange(year,1997,2003)
+							replace scred = statetax if scred > statetax & statef==41 & inrange(year,1997,2003)
+					* RI: 44
+						replace scred = eitc * .255 if statef==44 & inrange(year,2001,2003)
+							replace scred = statetax if scred > statetax & statef==44 & inrange(year,2001,2003)	
+					* VT: 50
+						replace scred = eitc * .28 if statef==50 & year==1993
+						replace scred = eitc * .25 if statef==50 & inrange(year,1994,1999)
+						replace scred = eitc * .32 if statef==50 & inrange(year,2000,2003)
+					* WI: 55 / varies by kids
+						replace scred = eitc * .05 if statef==55 & year==1993 & u14hh==1
+						replace scred = eitc * .25 if statef==55 & year==1993 & u14hh==2
+						replace scred = eitc * .75 if statef==55 & year==1993 & u14hh>2
+						
+						replace scred = eitc * .12 if statef==55 & year==1994 & u14hh==1
+						replace scred = eitc * .188 if statef==55 & year==1994 & u14hh==2
+						replace scred = eitc * .63 if statef==55 & year==1994 & u14hh>2
+						
+						replace scred = eitc * .04 if statef==55 & year==1995 & u14hh==1
+						replace scred = eitc * .16 if statef==55 & year==1995 & u14hh==2
+						replace scred = eitc * .5 if statef==55 & year==1995 & u14hh>2
+						
+						replace scred = eitc * .04 if statef==55 & inrange(year,1996,2003) & u14hh==1
+						replace scred = eitc * .14 if statef==55 & inrange(year,1996,2003) & u14hh==2
+						replace scred = eitc * .43 if statef==55 & inrange(year,1996,2003) & u14hh>2
+							
+				
 			* Disposable Income Concept, With TRIM
 			
 				gen pinc_trim = (incwage + incbus + incfarm + incss + incretir + incint ///
 				+ incunemp + incwkcom + incvet + incsurv + incdisab + incdiv ///
 				+ incrent + inceduc + incchild + incalim + incasist + incoth + ///
-				eitc + actcc + ctcc + mwpval + scred + stimulus + socassist) if niu==.
+				eitc + actcc + ctcc + mwpval + scred + stimulus + socassist) 
 				
 				replace pinc_trim = 0 if pinc_trim==.
 				
@@ -171,7 +261,7 @@
 					
 					* HI
 					by year hseq, sort: egen hinc_pretax_trim = total(pi) 
-					gen hi = hinc_pretax_trim + heatval 
+					gen hi = hinc_pretax_trim + heatval + SPMu_SchLunch + SPMu_CapHouseSub // housing + lunch at household/unit level
 					drop hinc_pretax_trim
 					
 					* HXIT
@@ -196,7 +286,7 @@
 					* PI/HI: Income
 					gen pi_pretrim = (inctot + eitc + actcc + ctcc + mwpval + scred + stimulus)
 					by year hseq, sort: egen hi_pretrim = total(pi_pretrim)
-						replace hi_pretrim = hi_pretrim + stampval + heatval
+						replace hi_pretrim = hi_pretrim + stampval + heatval + SPMu_SchLunch + SPMu_CapHouseSub
 					
 					* PXIT/HXIT: Taxes
 					gen pxit_pretrim = (fedtax + statetax + fedret + fica)
@@ -340,6 +430,7 @@
 					* Means of Pre/Post-TRIM Poverty Variables
 						ci mean spmpov spmpov_trim pre_fpov50 fpov50 [w=wtsupp] if year==2015
 						ci mean spmpov spmpov_trim pre_fpov50 fpov50 [w=wtsupp] if year==2015 & child
+						ci mean spmpov spmpov_trim pre_fpov50 fpov50 [w=wtsupp] if year==2015 & child & (singmom | singdad)
 								
 				
 				
