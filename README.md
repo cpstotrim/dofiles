@@ -4,15 +4,15 @@ Replication package for "The Effects of Benefit Underreporting on Estimates of P
 The documentation below provides guidance on adjusting for benefit underreporting in the CPS ASEC and for replicating the
 analyses in this paper. The replication packages contains five steps:
 
-    I.	Accessing TRIM
+    I.	Accessing TRIM3
     II.	Accessing the CPS ASEC
-    III.	Downloading TRIM Files
-    IV.	Merging TRIM to the CPS ASEC
+    III.	Downloading TRIM3 Files
+    IV.	Merging TRIM3 to the CPS ASEC
     V.	Re-Estimating Poverty Rates
       a.	Supplemental Poverty Measure
        b.	50% of Median Income
 
-I.	Accessing TRIM
+I.	Accessing TRIM3
 Researchers can request access the Urban Institute’s TRIM3 simulation model upon registration via online form. 
 The link to register is: http://trim3.urban.org/Registration/. There is no charge to access the baseline data, 
 but users must share their intended use of the TRIM data. Registration is necessary to download the TRIM data on imputed SNAP, 
@@ -38,7 +38,7 @@ Download the 2016 “Stata 12 DTA” file (CPS ASEC 2016 referring to reference 
 The code provided in Dofile 2 (below) will merge the file into the CPS ASEC and allow for re-estimation of SPM poverty 
 rates with TRIM-adjusted benefits. 
 
-  III.	Download TRIM Files 
+  III.	Download TRIM3 Files 
 After registering for and receiving access to TRIM, you can then download the files needed to correct for benefit 
 underreporting in the CPS ASEC. To do so, visit the TRIM website (trim3.urban.org) and select the TRIM3 Navigator 
 link using your login credentials. On the next page, select “Microdata” or “Microdata Examiner.”
