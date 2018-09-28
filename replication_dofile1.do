@@ -20,8 +20,8 @@
 	** Step One: 
 	**************
 	
-		 Read the instructions in Appendix II of the text for accessing and 
-		 downloading the TRIM files. Once you have the files save on your 
+		 Read the instructions in Appendix IV of the original paper for accessing and 
+		 downloading the TRIM files. Once you have the files saved on your 
 		 computer, proceed to step two.
 		
 		From the TRIM website, you will then download, at a minimum, the following 
@@ -72,15 +72,15 @@
 	** Step Two: Merging TRIM Files into Single File
 	***********************************	
 		
-		* Set file path to folder where TRIM downloads are saved
+		* Set file path to folder where TRIM downloads are saved:
 			
 			global pathtrim "C:\Users\...\TRIM3\merges"
 			
 				* Within this folder, create subfolders for each year of TRIM
 				* data you plan to merge (i.e. 2013, 2014, 2015). Move the TRIM
-				* files into the folder 
+				* files into the folder.
 			
-		* Set file path to folder where IPUM CPS (or Census download) is saved
+		* Set file path to folder where IPUMS CPS (or Census download) is saved
 			
 			global pathcps "C:\Users\...\CPS\"
 			
@@ -94,7 +94,8 @@
 			
 			global pathsave "C:\Users\...\TRIM3\complete"
 		
-		* Change to specify which year(s) of TRIM data you plan to merge into the CPS
+		* Change to specify which year(s) of TRIM data you plan to merge into the CPS.
+		* For now, this only creates the TRIM file for 2015:
 			
 			global yr "2015"
 	
@@ -130,9 +131,10 @@
 			
 		capture drop year
 		capture gen year = `yr'
-		ren oldid hseq
-		ren linenum lineno
+		ren oldid hseq	// hseq = housing ID in CPS ASEC
+		ren linenum lineno // lineno = person ID within houses in CPS ASEC
 		sort hseq lineno
+		
 		save trimcorrections`yr'.dta, replace
 	}
 		
@@ -170,14 +172,14 @@
 				save trim_ipumsMERGED_`yr'.dta, replace
 		
 		
-		********************************
+		*****************************************
 		* OPTION B: IF USING A NEW IPUMS CPS FILE:
-		********************************
+		*****************************************
 		
 			qui cd $cpspath
 			clear
 			
-			qui do cps_00071.do // change name of IPUMS dofile 
+			qui do cps_00071.do // change name of IPUMS dofile accordingly
 		
 			* Year variable will always refer to reference year. SYear = Survey year.
 				ren year syear
@@ -221,7 +223,7 @@
 		* Merge Imputed Benefits into Single Household from Replicates
 		
 			sort year hseq lineno
-			foreach x in snaptrim tanftrim_p housesubtrim_h ssitrim_p  {
+			foreach x in snaptrim tanftrim_p  ssitrim_p  {
 				qui gen orig_`x' = `x'
 				gen wtben`x' = (`x'*personwe)
 				bysort year hseq lineno: egen weightsum`x' = sum(personwe)
