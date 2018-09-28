@@ -47,36 +47,36 @@ This paper uses the 2013 to 2015 microdata files, but TRIM files are available f
 (if using the older files, however, take note that TRIM imputation procedures may have changed over time). Here, I detail 
 how to download and merge the 2015 TRIM file into the CPS ASEC, but the same procedure applies for other years.
 
-Select the 2015 (2016 CPS ASEC) input data set. You will then download, at a minimum, the following files, selecting the “extract data” link next to each. The sub-bullets below each file name indicate the variables within each extract that you should select prior to download:
-    •	Alien2015 Person
-        o	HOUSEHOLDID
-        o	FAMILYID
-       o	PERSONID
-       o	CpsPersonID
-       o	LineNumber
-        o	PersonWeight
-    •	Alien2015 Household
-        o	HOUSEHOLDID
-        o	AlienHouseholdSplit
-       o	HouseholdWeight
-       o	HighIncomeClone
-        o	OldIdentifier
-    •	Alien2015 Family
-        o	HOUSEHOLDID
-        o	FAMILYID
-       o	CpsIdentifier
-    •	SN2015_
-        o	HOUSEHOLDID
-       o	PERSONID
-       o	ANNUALBENEFITSRECEIVED
-    •	SSI2015_
-       o	HOUSEHOLDID
-        o	PERSONID
-       o	ANNUALSSIBENEFITSRECEIVED
-    •	TF2015_
-       o	HOUSEHOLDID
-        o	PERSONID
-       o	ANNUALBENEFITSRECEIVED
+Select the 2015 (2016 CPS ASEC) input data set. You will then download, at a minimum, the following files, selecting the “extract data” link next to each. The sub-bullets below each file name indicate the variables within each extract that you should select prior to download: <br><br>
+    •	Alien2015 Person  <br>
+        o	HOUSEHOLDID <br>
+        o	FAMILYID <br> 
+       o	PERSONID<br>
+       o	CpsPersonID<br>
+       o	LineNumber<br>
+        o	PersonWeight<br><br>
+    •	Alien2015 Household<br>
+        o	HOUSEHOLDID<br>
+        o	AlienHouseholdSplit<br>
+       o	HouseholdWeight<br>
+       o	HighIncomeClone<br>
+        o	OldIdentifier<br><br>
+    •	Alien2015 Family<br>
+        o	HOUSEHOLDID<br>
+        o	FAMILYID<br>
+       o	CpsIdentifier<br><br>
+    •	SN2015_<br>
+        o	HOUSEHOLDID<br>
+       o	PERSONID<br>
+       o	ANNUALBENEFITSRECEIVED<br><br>
+    •	SSI2015_<br>
+       o	HOUSEHOLDID<br>
+        o	PERSONID<br>
+       o	ANNUALSSIBENEFITSRECEIVED<br><br>
+    •	TF2015_<br>
+       o	HOUSEHOLDID<br>
+        o	PERSONID<br>
+       o	ANNUALBENEFITSRECEIVED<br>
 
 Under “formatting options”, select Stata 2.1 format (if using Stata) and extract each set of data. 
 Follow the link on the proceeding page to begin the download. Save each file into a local folder. 
